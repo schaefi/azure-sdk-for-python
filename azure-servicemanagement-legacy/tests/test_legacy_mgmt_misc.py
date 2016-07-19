@@ -1385,6 +1385,53 @@ class LegacyMgmtMiscTest(LegacyMgmtTestCase):
             self._reserved_ip_address_exists(self.reserved_ip_address))
 
     @record
+    def test_associate_reserved_ip_address(self):
+        # Arrange
+        deployment_name = 'utdeployment'
+        self._create_hosted_service_with_deployment(
+            self.hosted_service_name, deployment_name)
+        self._create_reserved_ip_address()
+        result = self.sms.associate_reserved_ip_address(
+            self.reserved_ip_address,
+            self.hosted_service_name,
+            deployment_name
+        )
+        self._wait_for_async(result.request_id)
+
+        # Act
+        result = self.sms.get_hosted_service_properties(
+            self.hosted_service_name, True
+        )
+
+        # Assert
+        self.assertIsNotNone(
+            result.deployments[0].virtual_ips[0].reserved_ip_name
+        )
+
+    @record
+    def test_disassociate_reserved_ip_address(self):
+        # Arrange
+        deployment_name = 'utdeployment'
+        self._create_hosted_service_with_deployment(
+            self.hosted_service_name, deployment_name)
+        self._create_reserved_ip_address()
+        result = self.sms.associate_reserved_ip_address(
+            self.reserved_ip_address,
+            self.hosted_service_name,
+            deployment_name
+        )
+        self._wait_for_async(result.request_id)
+        result = self.sms.disassociate_reserved_ip_address(
+            self.reserved_ip_address,
+            self.hosted_service_name,
+            deployment_name
+        )
+        self._wait_for_async(result.request_id)
+
+        # Assert
+        self.assertIsNone(result.deployments[0].virtual_ips)
+
+    @record
     def test_get_reserved_ip_address(self):
         # Arrange
         self._create_reserved_ip_address()
