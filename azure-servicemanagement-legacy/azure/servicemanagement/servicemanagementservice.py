@@ -1247,7 +1247,8 @@ class ServiceManagementService(_ServiceManagementClient):
             _XmlSerializer.associate_reserved_ip_to_xml(
                 service_name, deployment_name, virtual_ip_name
             ),
-            async=True
+            async=True,
+            x_ms_version='2015-02-01'
         )
 
     def disassociate_reserved_ip_address(
@@ -1278,7 +1279,8 @@ class ServiceManagementService(_ServiceManagementClient):
             _XmlSerializer.associate_reserved_ip_to_xml(
                 service_name, deployment_name, virtual_ip_name
             ),
-            async=True
+            async=True,
+            x_ms_version='2015-02-01'
         )
 
     def get_reserved_ip_address(self, name):
